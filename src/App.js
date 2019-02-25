@@ -23,7 +23,6 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-<<<<<<< HEAD
           <AppBar position="static" color="primary">
             <Toolbar>
               <Typography variant="h6" color="inherit">
@@ -41,19 +40,6 @@ class App extends Component {
               </Button>
             </Toolbar>
           </AppBar>
-=======
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
->>>>>>> 557356475bf6a7bc2028627784394e61e6302d3a
         </header>
         <div>
 
