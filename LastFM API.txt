@@ -1,0 +1,4 @@
+Application name	TestAPI Vladimir
+API key	bc272204a07fb4c4c94827e72cdac423
+Shared secret	e97f72f0cb538794f613938072a7e9a1
+Registered to	VladimirCVB
