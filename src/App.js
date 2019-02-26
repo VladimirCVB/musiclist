@@ -4,10 +4,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { TextField, Button } from '@material-ui/core';
+import axios from 'axios';
+
+// &artist=cher
+
+const API_URL = 'http://ws.audioscrobbler.com/2.0/?format=json&method=artist.search&api_key=' + process.env.REACT_APP_LASTFM_APPKEY;
 
 class App extends Component {
   state = {
-    searchTerm: ''
+    searchTerm: '',
+    artists: []
   }
   onTextChange = (event) => {
     const value = event.target.value;
@@ -16,7 +22,16 @@ class App extends Component {
 
   onSearchClick = () => {
     console.log(this.state.searchTerm);
-    this.setState({ searchTerm: '' })
+    this.search(this.state.searchTerm)
+  }
+
+  search = (terms) => {
+    const request = API_URL + '&artist=' + terms;
+    axios.get(request).then((response) => {
+      this.setState({artists: response.data.results.artistmatches.artist})
+    })
+
+    console.log(request);
   }
 
   render() {
@@ -42,7 +57,11 @@ class App extends Component {
           </AppBar>
         </header>
         <div>
-
+      <ul>
+        {this.state.artists.map((artist) => {
+         return <li key={artist.name}><span>{artist.name}</span> Number of listeners: <span>{artist.listeners}</span></li>
+        })}
+      </ul>
         </div>
       </div>
 
