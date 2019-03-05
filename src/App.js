@@ -3,12 +3,14 @@ import './App.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, ListItem, List, ListItemAvatar, ListItemText, Avatar } from '@material-ui/core';
 import axios from 'axios';
 
 // &artist=cher
 
-const API_URL = 'http://ws.audioscrobbler.com/2.0/?format=json&method=artist.search&api_key=' + process.env.REACT_APP_LASTFM_APPKEY;
+const API_URL = 'http://ws.audioscrobbler.com/2.0/?limit=5&format=json&method=artist.search&api_key=' + process.env.REACT_APP_LASTFM_APPKEY;
+
+const isEmpty = (str) => str.length === 0;
 
 class App extends Component {
   state = {
@@ -25,10 +27,29 @@ class App extends Component {
     this.search(this.state.searchTerm)
   }
 
+  clearSearch = () => {
+    this.setState({
+    searchTerm: '',
+    artists: [],
+  })
+  }
+
+  onResultClick = (artist) => {
+    return console.log(artist)
+  }
+
   search = (terms) => {
     const request = API_URL + '&artist=' + terms;
     axios.get(request).then((response) => {
-      this.setState({artists: response.data.results.artistmatches.artist})
+      const results = response.data.results;
+      const artists = results.artistmatches.artist.map((artist) => {
+        const avatarImage = artist.image.find(image => image.size === 'medium');
+        const imageUrl = avatarImage['#text'];
+        return{...artist, avatar: imageUrl }
+      });
+      
+
+      this.setState({artists});
     })
 
     console.log(request);
@@ -41,10 +62,10 @@ class App extends Component {
           <AppBar position="static" color="primary">
             <Toolbar>
               <Typography variant="h6" color="inherit">
-                Photos
+                Music
           </Typography>
               <TextField
-                placeholder="Search on spotify"
+                placeholder="Search on LastFM"
                 onChange={this.onTextChange}
                 value={this.state.searchTerm}
               />
@@ -53,15 +74,28 @@ class App extends Component {
               >
                 Search
               </Button>
+              {!isEmpty(this.state.searchTerm) &&(
+                <Button
+                onClick={this.clearSearch}
+                variant="contained"
+                >
+                Clear
+                </Button>)
+                }
             </Toolbar>
           </AppBar>
         </header>
         <div>
-      <ul>
+      <List>
         {this.state.artists.map((artist) => {
-         return <li key={artist.name}><span>{artist.name}</span> Number of listeners: <span>{artist.listeners}</span></li>
+         return <div><ListItem key={artist.name} ><ListItemAvatar><Avatar src={artist.avatar} /></ListItemAvatar>
+         <span>{artist.name} </span>
+         <span>Number of listeners: {artist.listeners}</span>
+         <ListItemText primary={artist.name} />
+         </ListItem>
+         <Button onClick = {this.onResultClick(artist)}>Favorite</Button></div>
         })}
-      </ul>
+      </List>
         </div>
       </div>
 
