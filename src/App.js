@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import { SearchResult } from './components/searchResult';
+import DialogBox, { Dialog } from './components/dialogBox';
 
 import {
   TextField,
   Button,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Card,
-  CardContent
+  DialogContent
 } from '@material-ui/core';
 import axios from 'axios';
 
-import './App.css';
+import './styles/App.css';
 
 const API_URL = 'http://ws.audioscrobbler.com/2.0/?limit=5&format=json&method=artist.search&api_key=' + process.env.REACT_APP_LASTFM_APPKEY;
 
@@ -24,7 +21,8 @@ const isEmpty = (str) => str.length === 0;
 class App extends Component {
   state = {
     searchTerm: '',
-    savedArtists: []
+    savedArtists: [],
+    on: false,
   }
 
   componentDidMount() {
@@ -47,8 +45,9 @@ class App extends Component {
       const results = response.data.results;
       const artists = results.artistmatches.artist.map((artist) => {
         const avatarImage = artist.image.find(image => image.size === 'medium');
+        const cardImage = artist.image.find(image => image.size === 'large')['#text'];
         const imageUrl = avatarImage['#text'];
-        return { ...artist, avatar: imageUrl }
+        return { ...artist, avatar: imageUrl, cardImage }
       });
 
       this.setState({ artists });
@@ -73,11 +72,20 @@ class App extends Component {
   }
 
   onResultClick = (artist) => {
-    this.clearSearch();
+    //this.clearSearch();
+    this.setState({on: true})
     const savedArtists = this.state.savedArtists;
     savedArtists.push(artist)
-    this.setState({ savedArtists: savedArtists })
-    localStorage.setItem('savedArtists', JSON.stringify(savedArtists));
+    this.updateArtist(savedArtists)
+  }
+
+  updateArtist = (newArtist) =>{
+    this.setState({ savedArtists: newArtist })
+    localStorage.setItem('savedArtists', JSON.stringify(newArtist));
+  }
+
+  clearDialog = () =>{
+    this.setState({on: false})
   }
 
   render() {
@@ -88,7 +96,7 @@ class App extends Component {
           <AppBar position="static" color="primary">
             <Toolbar className="search-bar">
               <Typography variant="h6" color="inherit">
-                Photos
+                Music
               </Typography>
               <TextField
                 placeholder="Search on Last.fm"
@@ -119,44 +127,10 @@ class App extends Component {
 
         <List className="search-results">
           {
-            results.map((artist) => {
-              return (
-                <ListItem
-                  button
-                  key={artist.name}
-                  className="result"
-                  onClick={() => this.onResultClick(artist)}
-                >
-                  <ListItemAvatar>
-                    <Avatar src={artist.avatar} alt={artist.name} />
-                  </ListItemAvatar>
-                  <ListItemText primary={artist.name} />
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    className="add-button"
-                  >
-                    Add to favorites
-                  </Button>
-                </ListItem>
-              )
-            })
+            results.map((artist, index) => <SearchResult key={index} artist={artist} onResultClick={this.onResultClick} />)
           }
         </List>
-        <div className="artist-container">
-          {
-            this.state.savedArtists.map((artist) => {
-              return (
-                <Card className="artist-card">
-                  <CardContent>
-                    {artist.name}
-                  </CardContent>
-                </Card>
-              )
-            })
-          }
-        </div>
+        <DialogBox state={this.state.on} clear={this.clearDialog} />
       </div>
     );
   }
