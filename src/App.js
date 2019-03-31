@@ -3,13 +3,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { SearchResult } from './components/searchResult';
-import DialogBox, { Dialog } from './components/dialogBox';
+import DialogBox from './components/dialogBox';
+import MenuBar from './components/menu'
 
 import {
   TextField,
   Button,
   List,
-  DialogContent
 } from '@material-ui/core';
 import axios from 'axios';
 
@@ -23,6 +23,7 @@ class App extends Component {
     searchTerm: '',
     savedArtists: [],
     on: false,
+    valid: false,
   }
 
   componentDidMount() {
@@ -67,16 +68,33 @@ class App extends Component {
   clearSearch = () => {
     this.setState({
       searchTerm: '',
-      artists: []
+      artists: [],
+      on: false,
+      valid: false
     })
   }
 
   onResultClick = (artist) => {
     //this.clearSearch();
-    this.setState({on: true})
     const savedArtists = this.state.savedArtists;
-    savedArtists.push(artist)
-    this.updateArtist(savedArtists)
+    var arr = JSON.parse(localStorage.getItem('savedArtists'));
+    var BreakException = {};
+    var notValid = [];
+
+    const check = arr.forEach((artists) =>{
+      if(artists.name === artist.name){
+        return notValid.push('Error');
+      }
+    });
+
+    if(notValid.includes('Error')){
+      this.setState({valid: true, on: false})
+    }
+    else{
+      savedArtists.push(artist);
+      this.updateArtist(savedArtists);
+      this.setState({on: true, valid: false}); 
+    }
   }
 
   updateArtist = (newArtist) =>{
@@ -88,16 +106,35 @@ class App extends Component {
     this.setState({on: false})
   }
 
+  clearValidation = () => {
+    this.setState({valid: false})
+  }
+
   render() {
     const results = this.state.artists || [];
     return (
       <div className="App">
+      <DialogBox 
+      id='added' 
+      state={this.state.on} 
+      clear={this.clearDialog}
+      message='Artist added to favorites!'
+      link='Go to Favorite' />
+
+      <DialogBox 
+      id='notValid' 
+      state={this.state.valid} 
+      clear={this.clearValidation}
+      message='Artist already added!' />
+
         <header className="App-header">
           <AppBar position="static" color="primary">
             <Toolbar className="search-bar">
+            <MenuBar button1='Home' page1='/' button2='Favorites' page2='/Favorites' />
               <Typography variant="h6" color="inherit">
-                Music
+                Music List Searcher 
               </Typography>
+              <div className='searchField'>
               <TextField
                 placeholder="Search on Last.fm"
                 className="search-input"
@@ -113,13 +150,15 @@ class App extends Component {
               >
                 Search
               </Button>
+              </div>
               {!isEmpty(this.state.searchTerm) && (
+                <div className='searchButton'>
                 <Button
                   onClick={this.clearSearch}
                   variant="contained"
                 >
                   Clear
-                </Button>)
+                </Button></div>)
               }
             </Toolbar>
           </AppBar>
@@ -130,7 +169,6 @@ class App extends Component {
             results.map((artist, index) => <SearchResult key={index} artist={artist} onResultClick={this.onResultClick} />)
           }
         </List>
-        <DialogBox state={this.state.on} clear={this.clearDialog} />
       </div>
     );
   }

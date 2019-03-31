@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/pageSelect.css';
 import {Link } from 'react-router-dom'
 
 export const Selector = (props) =>{

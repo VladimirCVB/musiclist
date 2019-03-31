@@ -2,3 +2,13 @@
     display: inline-block;
     margin-left: 2%;
 }
+
+.searchField{
+    margin-left: 55%;
+}
+
+a {
+    outline: none;
+    text-decoration: none;
+    color: black;
+}

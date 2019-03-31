@@ -1,17 +1,69 @@
-#box{
+#added, #notValid{
     background-color: #3f51b5;
-    width: 10%;
+    width: 15%;
     border-radius: 10px;
-    float: right;
     color: white;
+    position: absolute;
+    right: .2%;
+    animation: alert .5s cubic-bezier(0, 0.460, 0.450, 0.940) both;
+    z-index: 10;
+    border: black 2px solid;
+    padding: 10px;
+    text-align: center;
 }
 
-button {
+#notValid {
+    background-color: red;
+}
+
+#added > button, #notValid > button {
     border: none;
     background: none;
     color: white;
+    font-weight: bold;
+    transition: .3s;
+    padding: 1%;
 }
 
-h4{
-    margin: 0;
+#added > a {
+    color: white;
+    outline: none;
+    text-decoration: none;
+    transition: .5s;
 }
+
+#added > h3, #notValid > h3{
+    margin: 0;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+#added > a:hover {
+    color: black;
+    font-weight: bold;
+    font-style: italic;
+    transition: .5s;
+}
+
+#added > button:hover, #notValid > button:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: red;
+    border-radius: 10%;
+    transition: .5s;
+    padding: 1% 3%;
+    outline: none;
+}
+
+#notValid > button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+@keyframes alert {
+    0% {
+              transform: translateY(0);
+    }
+    100% {
+              transform: translateY(65%);
+    }
+  }
