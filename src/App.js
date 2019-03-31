@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { SearchResult } from './components/searchResult';
 import DialogBox from './components/dialogBox';
+import NavBar from './components/navBar';
 import MenuBar from './components/menu'
 
 import {
@@ -78,7 +76,7 @@ class App extends Component {
     //this.clearSearch();
     const savedArtists = this.state.savedArtists;
     var arr = JSON.parse(localStorage.getItem('savedArtists'));
-    var BreakException = {};
+    //use this to stop forEach var BreakException = {};
     var notValid = [];
 
     const check = arr.forEach((artists) =>{
@@ -126,15 +124,9 @@ class App extends Component {
       state={this.state.valid} 
       clear={this.clearValidation}
       message='Artist already added!' />
-
-        <header className="App-header">
-          <AppBar position="static" color="primary">
-            <Toolbar className="search-bar">
-            <MenuBar button1='Home' page1='/' button2='Favorites' page2='/Favorites' />
-              <Typography variant="h6" color="inherit">
-                Music List Searcher 
-              </Typography>
-              <div className='searchField'>
+      <NavBar>
+      <MenuBar button1='Home' page1='/' button2='Favorites' page2='/Favorites' />
+        <div className='searchField'>
               <TextField
                 placeholder="Search on Last.fm"
                 className="search-input"
@@ -160,9 +152,9 @@ class App extends Component {
                   Clear
                 </Button></div>)
               }
-            </Toolbar>
-          </AppBar>
-        </header>
+              </NavBar>
+
+
 
         <List className="search-results">
           {
