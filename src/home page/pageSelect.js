@@ -5,7 +5,7 @@ export const Selector = (props) =>{
     return(<div className={props.class}>
             <Link to={props.link}>
             <img src={props.image} width='100%'></img>
-            <p>{props.text}</p>
+            <span>{props.text}</span>
             </Link>
     </div>)
 }

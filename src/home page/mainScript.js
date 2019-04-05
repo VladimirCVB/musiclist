@@ -8,8 +8,13 @@ class Main extends Component {
     render(){
         return(
             <div>
-                <Selector class='artists' link='/App' image={artists}text='Artists'/>
-                <Selector class='favorit' link='/Favorites' image={favorite} text='Favorite' />
+                <div>
+                    <Selector class='artists' link='/App' image={artists}text='Artists'/>
+                    <Selector class='favorit' link='/Favorites' image={favorite} text='Favorite' />
+                </div>
+                <div className='home-name'>
+                    <p>Last.fm Music List</p>
+                </div>
             </div>           
         )
     }

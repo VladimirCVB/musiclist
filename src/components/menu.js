@@ -7,6 +7,8 @@ import {
   Menu
 } from '@material-ui/core';
 
+import '../styles/menu.css'
+
 class MenuBar extends Component {
     state = {
         anchorEl: null
@@ -25,6 +27,7 @@ class MenuBar extends Component {
     render(){
         return(
             <div>
+              <div className='icon'>
         <Button
           aria-owns={this.state.anchorEl ? 'simple-menu' : undefined}
           aria-haspopup="true"
@@ -33,6 +36,7 @@ class MenuBar extends Component {
         >
           <i class="fas fa-bars"></i>
         </Button>
+        </div>
         <Menu
           id="simple-menu"
           anchorEl={this.state.anchorEl}

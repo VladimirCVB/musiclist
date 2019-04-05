@@ -1,9 +1,3 @@
-/* body{
-  background-image: url(../images/background.jpg);
-  background-position: center center;
-  background-repeat: no-repeat;
-} */
-
 .artists, .favorit{
   display: inline-block;
   animation: slide-bottom 1s 1s cubic-bezier(0, 0.460, 0.450, 0.940) both;
@@ -12,7 +6,17 @@
   text-align: center;
   border: 4px black solid;
   border-radius: 2%;
+  transform: translateY(100px);
   background-color: white;
+  transition: width .5s, background-color .5s .4s, border .5s .4s;
+}
+
+.artists > a > span, .favorit > a > span {
+  display: inline-block;
+  margin: 5% 0px;
+  font-size: 200%;
+  font-weight: bold;
+  letter-spacing: 3px;
 }
 
 .artists{
@@ -27,8 +31,20 @@
 
 .artists:hover, .favorit:hover{
     width: 27%;
-    transition: .5s;
+    background-color: orange; 
+    border: orange 4px solid;
+    animation: slide-bottom paused, blip 1s 2s running infinite linear alternate;
 }
+
+.home-name > p {
+  bottom: 0;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.7em;
+  opacity: 0.3;
+}
+
 
 
 @keyframes slide-bottom {
@@ -41,7 +57,15 @@
               transform: translateY(100px);
     }
   }
-  
-  
-  
-  
+
+  @keyframes blip {
+    0%{
+      border-color: orange;
+      background-color: orange;
+    }
+
+    100%{
+      border-color: orangered;
+      background-color: orangered;
+    }
+  }
